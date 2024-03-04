@@ -1,0 +1,624 @@
+openapi: 3.0.3
+info:
+  title: Сервис управления рассылками
+  version: 1.0.0
+  description: Сервис управления рассылками API администрирования и получения статистики.
+paths:
+  /api/v1/clients/:
+    get:
+      operationId: clients_list
+      summary: Список клиентов
+      tags:
+      - clients
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Client'
+              examples:
+                Example:
+                  value:
+                  - id: 1
+                    phone: 79999999999
+                    operator_code: '999'
+                    tag: tag1
+                    timezone: Europe/Moscow
+          description: Успешная операция
+    post:
+      operationId: clients_create
+      summary: Добавление нового клиента в справочник
+      tags:
+      - clients
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+            examples:
+              Example:
+                value:
+                  phone: 79999999999
+                  tag: tag1
+                  timezone: Europe/Moscow
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Client'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Client'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+              examples:
+                Example:
+                  value:
+                    id: 1
+                    phone: 79999999999
+                    operator_code: '999'
+                    tag: tag1
+                    timezone: Europe/Moscow
+          description: Успешная операция
+        '400':
+          description: Некорректный запрос
+  /api/v1/clients/{id}/:
+    get:
+      operationId: clients_retrieve
+      summary: Нахождение клиента по ID
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: ID клиента
+        required: true
+      tags:
+      - clients
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+              examples:
+                Example:
+                  value:
+                    id: 1
+                    phone: 79999999999
+                    operator_code: '999'
+                    tag: tag1
+                    timezone: Europe/Moscow
+          description: Успешная операция
+        '404':
+          description: Клиент с заданным ID не найден
+    put:
+      operationId: clients_update
+      summary: Обновление существующего клиента по ID
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: ID клиента
+        required: true
+      tags:
+      - clients
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+            examples:
+              Example:
+                value:
+                  phone: 79999999999
+                  tag: tag1
+                  timezone: Europe/Moscow
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Client'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Client'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+              examples:
+                Example:
+                  value:
+                    id: 1
+                    phone: 79999999999
+                    operator_code: '999'
+                    tag: tag1
+                    timezone: Europe/Moscow
+          description: Успешная операция
+        '400':
+          description: Некорректный запрос
+        '404':
+          description: Клиент с заданным ID не найден
+    delete:
+      operationId: clients_destroy
+      summary: Удаление клиента по ID
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: ID клиента
+        required: true
+      tags:
+      - clients
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+          description: Успешная операция
+        '404':
+          description: Клиент с заданным ID не найден
+  /api/v1/messages/:
+    get:
+      operationId: messages_list
+      summary: Список сообщений
+      parameters:
+      - in: query
+        name: notification
+        schema:
+          type: integer
+        description: ' Фильтр по ID рассылки'
+      - in: query
+        name: ordering
+        schema:
+          type: string
+        description: 'Сортировка списка сообщений. Доступные поля: date_time_send'
+      tags:
+      - messages
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+              examples:
+                Example:
+                  value:
+                  - id: 1
+                    notification: 1
+                    client: 1
+                    status: true
+                    date_time_send: '2022-11-11T11:11:11+03:00'
+          description: Успешная операция
+  /api/v1/messages/{id}/:
+    get:
+      operationId: messages_retrieve
+      summary: Нахождение сообщения по ID
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: ID сообщения
+        required: true
+      tags:
+      - messages
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+              examples:
+                Example:
+                  value:
+                    id: 1
+                    notification: 1
+                    client: 1
+                    status: true
+                    date_time_send: '2022-11-11T11:11:11+03:00'
+          description: Успешная операция
+        '404':
+          description: Сообщение с заданным ID не найдено
+  /api/v1/notifications/:
+    get:
+      operationId: notifications_list
+      description: Список рассылок. Содержит общее количество отправленных и неотправленных
+        каждой рассылкой сообщений. Для получения статистики список можно отсортировать
+        по дате начала рассылки, окончания рассылки, отправленным сообщениям, неотправленным
+        сообщениям; отфильтровать по дате начала рассылок.
+      summary: Список рассылок
+      parameters:
+      - in: query
+        name: date_time_start
+        schema:
+          type: string
+          format: date
+        description: Фильтр по дате начала рассылки
+        examples:
+          Example:
+            value: '2022-11-11'
+      - in: query
+        name: ordering
+        schema:
+          type: string
+        description: 'Сортировка списка рассылок. Доступные поля: date_time_start,
+          date_time_stop, messages_sended, messages_not_sended'
+      tags:
+      - notifications
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'
+              examples:
+                Example:
+                  value:
+                  - id: 1
+                    date_time_start: '2022-11-11T11:11:11+03:00'
+                    date_time_stop: '2022-11-11T11:11:11+03:00'
+                    text: text
+                    tags: tag1,tag2
+                    messages_sended: 0
+                    messages_not_sended: 0
+          description: Успешная операция
+    post:
+      operationId: notifications_create
+      summary: Создание рассылки
+      tags:
+      - notifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Notification'
+            examples:
+              Example:
+                value:
+                  date_time_start: '2022-11-11T11:11:11+03:00'
+                  date_time_stop: '2022-11-11T11:11:11+03:00'
+                  text: text
+                  tags: tag1,tag2
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Notification'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Notification'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              examples:
+                Example:
+                  value:
+                    id: 1
+                    date_time_start: '2022-11-11T11:11:11+03:00'
+                    date_time_stop: '2022-11-11T11:11:11+03:00'
+                    text: text
+                    tags: tag1,tag2
+                    messages_sended: 0
+                    messages_not_sended: 0
+          description: Успешная операция
+        '400':
+          description: Некорректный запрос
+  /api/v1/notifications/{id}/:
+    get:
+      operationId: notifications_retrieve
+      description: Содержит информацию о отправленных и неотправленных рассылкой сообщений.
+      summary: Нахождение рассылки по ID
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: ID рассылки
+        required: true
+      tags:
+      - notifications
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              examples:
+                Example:
+                  value:
+                    id: 1
+                    date_time_start: '2022-11-11T11:11:11+03:00'
+                    date_time_stop: '2022-11-11T11:11:11+03:00'
+                    text: text
+                    tags: tag1,tag2
+                    messages_sended: 0
+                    messages_not_sended: 0
+          description: Успешная операция
+        '404':
+          description: Рассылка с заданным ID не найдена
+    put:
+      operationId: notifications_update
+      summary: Обновление существующей рассылки по ID
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: ID рассылки
+        required: true
+      tags:
+      - notifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Notification'
+            examples:
+              Example:
+                value:
+                  date_time_start: '2022-11-11T11:11:11+03:00'
+                  date_time_stop: '2022-11-11T11:11:11+03:00'
+                  text: text
+                  tags: tag1,tag2
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Notification'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Notification'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              examples:
+                Example:
+                  value:
+                    id: 1
+                    date_time_start: '2022-11-11T11:11:11+03:00'
+                    date_time_stop: '2022-11-11T11:11:11+03:00'
+                    text: text
+                    tags: tag1,tag2
+                    messages_sended: 0
+                    messages_not_sended: 0
+          description: Успешная операция
+        '400':
+          description: Некорректный запрос
+        '404':
+          description: Рассылка с заданным ID не найдена
+    delete:
+      operationId: notifications_destroy
+      summary: Удаление рассылки по ID
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: ID рассылки
+        required: true
+      tags:
+      - notifications
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: Успешная операция
+        '404':
+          description: Рассылка с заданным ID не найдена
+  /api/v1/notifications/statistics/:
+    get:
+      operationId: notifications_statistics_retrieve
+      description: Отображает общее количество рассылок, отправленных и неотправленных
+        сообщений.
+      summary: Статистика рассылок
+      tags:
+      - notifications
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              examples:
+                Example:
+                  value:
+                    total_notifications: 0
+                    total_messages_sended: 0
+                    total_messages_not_sended: 0
+          description: Успешная операция
+  /api/v1/notifications/statistics/{date}/:
+    get:
+      operationId: notifications_statistics_retrieve_2
+      description: Отображает общее количество рассылок, отправленных и неотправленных
+        сообщений за определённый день.
+      summary: Статистика рассылок за определённый день
+      parameters:
+      - in: path
+        name: date
+        schema:
+          type: string
+          format: date
+        description: Дата начала рассылок
+        required: true
+        examples:
+          Example:
+            value: '2022-11-11'
+      tags:
+      - notifications
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              examples:
+                Example:
+                  value:
+                    total_notifications: 0
+                    total_messages_sended: 0
+                    total_messages_not_sended: 0
+          description: Успешная операция
+components:
+  schemas:
+    Client:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        phone:
+          type: integer
+          maximum: 79999999999
+          minimum: 70000000000
+          format: int64
+          title: ' Номер телефона'
+          description: ' Номер телефона клиента в формате 7XXXXXXXXXX. Уникален для
+            каждого клиента.'
+        operator_code:
+          type: string
+          readOnly: true
+          title: Код оператора
+          description: Код оператора в формате XXX. Задаётся автоматически из номера
+            телефона.
+        tag:
+          type: string
+          title: Тег (произвольная метка)
+          maxLength: 255
+        timezone:
+          type: string
+      required:
+      - id
+      - operator_code
+      - phone
+      - tag
+      - timezone
+    Message:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        notification:
+          type: integer
+        client:
+          type: integer
+        status:
+          type: boolean
+          title: Статус отправки сообщения
+        date_time_send:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Дата и время отправки сообщения
+      required:
+      - client
+      - date_time_send
+      - id
+      - notification
+    Notification:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        date_time_start:
+          type: string
+          format: date-time
+          title: Дата и время начала рассылки
+        date_time_stop:
+          type: string
+          format: date-time
+          title: Дата и время окончания рассылки
+        text:
+          type: string
+          title: Текст рассылки
+        tags:
+          type: string
+          title: Список тэгов
+          description: Список тэгов для рассылки. Тэги должны быть отделены запятыми.
+        messages_sended:
+          type: integer
+          readOnly: true
+          title: Количество отправленных сообщений рассылкой
+        messages_not_sended:
+          type: integer
+          readOnly: true
+          title: Количество сообщений, отправка которых завершилось ошибкой
+      required:
+      - date_time_start
+      - date_time_stop
+      - id
+      - messages_not_sended
+      - messages_sended
+      - tags
+      - text
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
